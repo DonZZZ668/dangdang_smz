@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.CategoryDao">
+	<resultMap id="rest1" type="Category">
+		<id column="fid" property="id"/>
+		<result column="fname" property="name"/>
+		<result column="levels" property="levels"/>
+		<association property="father" javaType="Category">
+			<id column="sid" property="id"/>
+			<result column="sname" property="name"/>
+		</association>
+	</resultMap>
+	<!--查询所有的类别  -->
+	<select id="queryAllCategory" resultMap="rest1" >
+		select f.id fid,f.name fname,f.levels,s.id sid,s.name sname
+		from dd_category f left join dd_category s
+		on f.parent_id=s.id
+	</select>
+	<!--添加一级类别  -->
+	<insert id="addFirst" parameterType="Category">
+		insert into dd_category values(#{id},#{name},#{parentId,jdbcType=VARCHAR},#{levels})
+	</insert>
+	<!--查看所有一级类别  -->
+	<select id="queryAllFirst" resultType="Category">
+		select id,name,levels from dd_category where levels='1'
+	</select>
+	<!--添加一级类别  -->
+	<insert id="addSecond" parameterType="Category">
+		insert into dd_category values(#{id},#{name},#{parentId},#{levels})
+	</insert>
+	<!--查看所有二级类别  -->
+	<select id="queryAllSecond" resultType="Category">
+		select id,name,levels from dd_category where levels='2'
+	</select>
+	<!--根据id查询类别  -->
+	<select id="queryById" resultType="Category" parameterType="String">
+		select id,name,levels from dd_category where id=#{id}
+	</select>
+	<!-- 查看当前类别是一级类别低下是否管理着二级类别 -->
+	<select id="querySons" resultType="Category" parameterType="String">
+		select id,name,parent_id parentId,levels from dd_category where parent_id=#{id}
+	</select>
+	<!-- 根据类id删除类别 -->
+	<delete id="deleteOne" parameterType="String">
+		delete from dd_category where id=#{id}
+	</delete>
+	
+	<resultMap id="res2" type="Category">
+		<id column="fid" property="id"/>
+		<result column="fname" property="name"/>
+		<result column="flevels" property="levels"/>
+		<collection property="sons" ofType="Category">
+			<id column="sid" property="id"/>
+			<result column="sname" property="name"/>
+			<result column="slevels" property="levels"/>
+			<result column="sparentId" property="parentId"/>
+		</collection>
+	</resultMap>
+	<select id="queryFirst" resultMap="res2">
+		select f.id fid,f.name fname,f.levels flevels,s.id sid,s.name sname,s.levels slevels
+		from dd_category f left join dd_category s
+		on f.id=s.parent_id
+		where f.levels='1'
+	</select>
+	
+	<select id="queryOneFirst" resultMap="res2">
+		select f.id fid,f.name fname,f.levels flevels,s.id sid,s.name sname,s.levels slevels,s.parent_id sparentId
+		from dd_category f left join dd_category s
+		on f.id=s.parent_id
+		where f.levels='1' and f.id=#{id}
+	</select>
+</mapper>

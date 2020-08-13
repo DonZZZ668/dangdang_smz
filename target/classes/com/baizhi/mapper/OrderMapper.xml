@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.OrderDao">
+	<insert id="addOneOrder" parameterType="Order">
+		insert into dd_order(id,order_num,total,create_date,address_id,user_id,name,local) values(#{id},#{orderNum},#{total},#{createDate},#{addressId},#{userId},#{name},#{local})
+	</insert>
+	<select id="queryAllOrder" resultType="Order">
+		select id,order_num orderNum,total,name,local,create_date createDate from dd_order
+	</select>
+	
+	<resultMap id="rest1" type="Order">
+		<id column="oid" property="id"/>
+		<result column="order_num" property="orderNum"/>
+		<result column="total" property="total"/>
+		<collection property="items" ofType="item">
+			<id column="iid" property="id"/>
+			<result column="name" property="name"/>
+			<result column="cover" property="cover"/>
+			<result column="price" property="price"/>
+			<result column="dprice" property="dprice"/>
+			<result column="count" property="count"/>
+		</collection>
+	</resultMap>
+	<select id="queryOneOrderMessage" parameterType="String" resultMap="rest1">
+		select o.id oid,o.order_num,o.total,i.id iid,i.name,i.cover,i.price,i.dprice,i.count
+		from dd_order o left join dd_item i
+		on o.id=i.order_id
+		where o.id=#{id}
+	</select>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<include file="com/baizhi/struts/inter-struts.xml"></include>
+	<include file="com/baizhi/struts/admin-struts.xml"></include>
+    <package name="order" extends="inter" namespace="/order">
+    	<action name="addOrder" class="com.baizhi.action.OrderAction" method="addOrder">
+    		<result name="success">/front/order/order_ok.jsp</result>
+    	</action>
+    	<action name="queryAll" class="com.baizhi.action.OrderAction" method="queryAll">
+    		<interceptor-ref name="backStack"></interceptor-ref>
+    		<result name="login">/index.jsp</result>
+    		<result name="success">/back/order/show.jsp</result>
+    	</action>
+    	<action name="queryOneOrderMessage" class="com.baizhi.action.OrderAction" method="queryOneOrderMessage">
+    		<result name="success">/back/order/detail.jsp</result>
+    	</action>
+    </package>
+</struts>

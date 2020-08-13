@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.BookDao">
+	<!-- 查询所有图书 -->
+	<select id="queryAll" resultType="Book" >
+		select id,name,author,price,dprice,press,press_date pressDate,cover,sale,stock from dd_book
+	</select>
+	<!-- 模糊查询 -->
+	<select id="queryByKey" resultType="Book" >
+		select id,name,author,price,dprice,press,press_date pressDate,cover,sale,stock 
+		from dd_book
+		<where>
+			<if test="key=='name'">name like '%${content}%'</if>
+			<if test="key=='author'">author like '%${content}%'</if>
+			<if test="key=='press'">press like '%${content}%'</if>
+		</where>
+	</select>
+	
+	<insert id="addOneBook" parameterType="Book">
+		insert into dd_book(id,name,author,cover,press,press_date,edition,print_date,impression,isbn,word_num,page_num,sizes,paper,pack,price,dprice,create_date,editor_recommend,content_abstract,author_abstract,director,media_commentary,category_id,sale,stock) 
+		values(#{id},#{name},#{author},#{cover},#{press},#{pressDate},#{edition},#{printDate},#{impression},#{isbn},#{wordNum},#{pageNum},#{sizes},#{paper},#{pack},#{price},#{dprice},#{createDate},#{editorRecommend},#{contentAbstract},#{authorAbstract},#{director},#{mediaCommentary},#{categoryId},#{sale},#{stock})
+	</insert>
+	
+	<!-- 根据id查询图书 -->
+	<select id="queryById" resultType="Book" >
+		select id,name,author,cover,press,press_date pressDate,edition,print_date printDate,impression,isbn,word_num wordNum,page_num pageNum,sizes,paper,pack,price,dprice,create_date createDate,editor_recommend editorRecommend,content_abstract contentAbstract,author_abstract authorAbstract,director,media_commentary mediaCommentary,category_id categoryId,sale,stock from dd_book where id=#{id}
+	</select>
+	
+	<!-- 更新图书 -->
+	<update id="updateOneBook" parameterType="Book">
+		update dd_book set name=#{name},author=#{author},press=#{press},press_date=#{pressDate},edition=#{edition},print_date=#{printDate},impression=#{impression},isbn=#{isbn},word_num=#{wordNum},page_num=#{pageNum},sizes=#{sizes},paper=#{paper},pack=#{pack},price=#{price},dprice=#{dprice},create_date=#{createDate},editor_recommend=#{editorRecommend},content_abstract=#{contentAbstract},author_abstract=#{authorAbstract},director=#{director},media_commentary=#{mediaCommentary},category_id=#{categoryId},sale=#{sale},stock=#{stock}
+			<if test="cover!=null">,cover=#{cover}</if>
+			where id=#{id}
+	</update>
+	
+	<!-- 删除图书 -->
+	<delete id="deleteOneBook" parameterType="String">
+		delete from dd_book where id=#{id}
+	</delete>
+	
+	<!-- 编辑推荐图书 -->
+	<select id="queryAllField" resultType="Book">
+		select id,name,author,cover,press,press_date pressDate,edition,print_date printDate,impression,isbn,word_num wordNum,page_num pageNum,sizes,paper,pack,price,dprice,create_date createDate,editor_recommend editorRecommend,content_abstract contentAbstract,author_abstract authorAbstract,director,media_commentary mediaCommentary,category_id categoryId,sale,stock
+		from dd_book
+	</select>
+	
+	<!-- 根据销量查询图书 -->
+	<select id="queryBySale" resultType="Book">
+		select b.*,rownum from(select id,name,cover,price,dprice,sale
+		from dd_book where sale!=0 order by sale desc)b
+		where rownum between 0 and 8
+	</select>
+	
+	<!-- 根据上架时间查询图书 -->
+	<select id="queryByCreateDate" resultType="Book">
+		select b.*,rownum from(select id,name,cover,price,dprice,sale
+		from dd_book order by create_date desc)b
+		where rownum between 0 and 8
+	</select>
+	
+	<!-- 根据上架时间和销量查询图书 -->
+	<select id="queryBySaleAndCreateDate" resultType="Book">
+		select b.*,rownum from(select id,name
+		from dd_book order by sale,create_date desc)b
+		where rownum between 0 and 8
+	</select>
+	
+	<select id="querySecond" resultType="Book">
+		select id,name,author,cover,press,press_Date pressDate,sale,price,dprice,content_abstract contentAbstract from dd_book
+			<where>
+				<choose>
+					<when test="sid==null || sid==''">
+						category_id in(select id from dd_category where parent_id=#{fid})
+					</when>
+					<otherwise>
+						category_id=#{sid}
+					</otherwise>
+				</choose>
+			</where>
+	</select>
+	
+	<select id="queryByPage" resultType="Book">
+		select bb.* from
+		(select b.*,rownum rn from
+		(select id,name,author,cover,press,press_Date pressDate,sale,price,dprice,content_abstract contentAbstract from dd_book
+			<where>
+				<choose>
+					<when test="sid==null || sid==''">
+						category_id in(select id from dd_category where parent_id=#{fid})
+					</when>
+					<otherwise>
+						category_id=#{sid}
+					</otherwise>
+				</choose>
+			</where>)b)bb where rn between #{begin} and #{end}
+	</select>
+	
+	<select id="queryTotal" resultType="Integer">
+		select count(id) from dd_book
+			<where>
+				<choose>
+					<when test="sid==null || sid==''">
+						category_id in(select id from dd_category where parent_id=#{fid})
+					</when>
+					<otherwise>
+						category_id=#{sid}
+					</otherwise>
+				</choose>
+			</where>
+	</select>
+	
+	<!-- 修改图书的销量和库存 -->
+	<update id="updateBookSaleStock" parameterType="Book">
+		update dd_book set sale=#{sale},stock=#{stock} where id=#{id}
+	</update>
+</mapper>

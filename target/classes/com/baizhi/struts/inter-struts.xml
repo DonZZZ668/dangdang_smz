@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+    <package name="inter" extends="struts-default">
+    	<interceptors>
+    		<interceptor name="frontInter" class="com.baizhi.interceptor.FrontInterceptor"></interceptor>
+    		<interceptor name="backInter" class="com.baizhi.interceptor.BackLoginInterceptor"></interceptor>
+    		<interceptor-stack name="frontStack">
+    			<interceptor-ref name="defaultStack"></interceptor-ref>
+    			<interceptor-ref name="frontInter"></interceptor-ref>
+    		</interceptor-stack>
+    		<interceptor-stack name="backStack">
+    			<interceptor-ref name="defaultStack"></interceptor-ref>
+    			<interceptor-ref name="backInter"></interceptor-ref>
+    		</interceptor-stack>
+    	</interceptors>
+    
+    </package>
+</struts>

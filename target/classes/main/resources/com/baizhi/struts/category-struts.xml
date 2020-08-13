@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<include file="com/baizhi/struts/inter-struts.xml"></include>
+	<include file="com/baizhi/struts/admin-struts.xml"></include>
+   	<package name="category" extends="inter" namespace="/category">
+   		<action name="queryAllCategory" class="com.baizhi.action.CategoryAction" method="queryAllCategory">
+   			<interceptor-ref name="backStack"></interceptor-ref>
+    		<result name="login">/index.jsp</result>
+   			<result name="success">/back/category/show.jsp</result>
+   		</action>
+   		<action name="addFirst" class="com.baizhi.action.CategoryAction" method="addFirst">
+   			<result name="success" type="chain">queryAllCategory</result>
+   		</action>
+   		<action name="queryAllFirst" class="com.baizhi.action.CategoryAction" method="queryAllFirst">
+   			<result name="success">/back/category/add-second.jsp</result>
+   		</action>
+   		<action name="addSecond" class="com.baizhi.action.CategoryAction" method="addSecond">
+   			<result name="success" type="chain">queryAllCategory</result>
+   		</action>
+   		<action name="deleteOne" class="com.baizhi.action.CategoryAction" method="deleteOne">
+   			<result name="success" type="chain">queryAllCategory</result>
+   		</action>
+   		<action name="queryAllSecond" class="com.baizhi.action.CategoryAction" method="queryAllSecond">
+   			<result name="success">/back/book/add.jsp</result>
+   		</action>
+   	</package>
+    
+</struts>

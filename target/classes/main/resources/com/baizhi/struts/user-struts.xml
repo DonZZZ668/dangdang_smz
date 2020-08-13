@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<include file="com/baizhi/struts/book-struts.xml"></include>
+	<include file="com/baizhi/struts/inter-struts.xml"></include>
+	<include file="com/baizhi/struts/admin-struts.xml"></include>
+    <package name="user" extends="inter" namespace="/user">
+    	<action name="login" class="com.baizhi.action.UserAction" method="login">
+    		<result name="loginSuccess" type="redirectAction">
+    			<param name="namespace">/book</param>
+    			<param name="actionName">main</param>
+    		</result>
+    		<result name="error">/front/user/login_form.jsp</result>
+    	</action>
+    	<action name="getRelCode" class="com.baizhi.action.UserAction" method="getRelCode"></action>
+    	<action name="regist" class="com.baizhi.action.UserAction" method="regist">
+    		<result name="registSuccess" type="chain">getActiveCode</result>
+    		<result name="error">/front/user/register_form.jsp</result>
+    	</action>
+    	<action name="getActiveCode" class="com.baizhi.action.UserAction" method="getActiveCode">
+    		<result name="success">/front/user/verify_form.jsp</result>
+    	</action>
+    	<action name="activeUser" class="com.baizhi.action.UserAction" method="activeUser">
+    		<result name="success">/front/user/register_ok.jsp</result>
+    		<result name="error">/front/user/verify_form.jsp</result>
+    	</action>
+    	<action name="signOut" class="com.baizhi.action.UserAction" method="signOut">
+    		<result name="success" type="redirectAction">
+    			<param name="namespace">/book</param>
+    			<param name="actionName">main</param>
+    		</result>
+    	</action>
+    	
+    	<action name="queryAll" class="com.baizhi.action.UserAction" method="queryAll">
+    		<interceptor-ref name="backStack"></interceptor-ref>
+    		<result name="login">/index.jsp</result>
+    		<result name="success">/back/user/show.jsp</result>
+    	</action>
+    	<action name="updateStatus" class="com.baizhi.action.UserAction" method="updateStatus">
+    		<result name="success" type="chain">queryAll</result>
+    	</action>
+    </package>
+</struts>

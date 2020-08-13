@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<include file="com/baizhi/struts/inter-struts.xml"></include>
+	<include file="com/baizhi/struts/admin-struts.xml"></include>
+    <package name="book" extends="inter" namespace="/book">
+    
+    	<action name="queryAll" class="com.baizhi.action.BookAction" method="queryAll">
+    		<interceptor-ref name="backStack"></interceptor-ref>
+    		<result name="login">/index.jsp</result>
+    		<result name="success">/back/book/show.jsp</result>
+    	</action>
+    	<action name="queryByKey" class="com.baizhi.action.BookAction" method="queryByKey">
+    		<result name="success" >/back/book/show.jsp</result>
+    	</action>
+    	<action name="addOneBook" class="com.baizhi.action.BookAction" method="addOneBook">
+    		<result name="success" type="chain">queryAll</result>
+    	</action>
+    	<action name="queryById" class="com.baizhi.action.BookAction" method="queryById">
+    		<result name="success">/back/book/update2.jsp</result>
+    	</action>
+    	<action name="updateOneBook" class="com.baizhi.action.BookAction" method="updateOneBook">
+    		<result name="success" type="chain">queryAll</result>
+    	</action>
+    	<action name="deleteOneBook" class="com.baizhi.action.BookAction" method="deleteOneBook">
+    		<result name="success" type="chain">queryAll</result>
+    	</action>
+    	<action name="main" class="com.baizhi.action.BookAction" method="main">
+    		<result name="success">/front/main/main.jsp</result>
+    	</action>
+    	<action name="second" class="com.baizhi.action.BookAction" method="second">
+    		<result name="success">/front/main/book_list.jsp</result>
+    	</action>
+    	<action name="showDetail" class="com.baizhi.action.BookAction" method="showDetail">
+    		<result name="success">/front/main/book_detail.jsp</result>
+    	</action>
+    </package>
+</struts>

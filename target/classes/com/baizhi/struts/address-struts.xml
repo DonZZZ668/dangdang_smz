@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<include file="com/baizhi/struts/inter-struts.xml"></include>
+	<include file="com/baizhi/struts/user-struts.xml"></include>
+    <package name="address" extends="inter" namespace="/address">
+    	<action name="selectAddresses" class="com.baizhi.action.AddressAction" method="selectAddresses">
+    		<interceptor-ref name="frontStack"></interceptor-ref>
+    		<result name="success">/front/order/address_form.jsp</result>
+    		<result name="login" >/front/user/login_form.jsp</result>
+    		<result name="active" type="redirectAction">
+    			<param name="namespace">/user</param>
+    			<param name="actionName">getActiveCode</param>
+    		</result>
+    	</action>
+    	
+    </package>
+</struts>
